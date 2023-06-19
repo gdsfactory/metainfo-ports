@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description>klive server</description>
+ <version/>
+ <category>pymacros</category>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>true</autorun>
+ <autorun-early>false</autorun-early>
+ <priority>0</priority>
+ <shortcut/>
+ <show-in-menu>false</show-in-menu>
+ <group-name/>
+ <menu-path/>
+ <interpreter>python</interpreter>
+ <dsl-interpreter-name/>
+ <text>import pya
+
+from pathlib import Path
+from metaports import toggle_ports, update_icon
+
+app = pya.Application.instance()
+mw = app.main_window()
+menu =  mw.menu()
+
+_path = Path(__file__).parent.parent
+poff = str(_path/"PortOff.png")
+
+port_action = pya.Action()
+port_action.icon = poff
+port_action.on_triggered = lambda: toggle_ports(port_action)
+port_action.icon_text = "Show Ports"
+menu.insert_item("@toolbar.end", "port_action", port_action)
+mw.on_current_view_changed = lambda: update_icon(port_action)
+
+</text>
+</klayout-macro>
