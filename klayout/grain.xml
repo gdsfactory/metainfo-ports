@@ -5,7 +5,7 @@
  <hidden>false</hidden>
  <version>0.0.1</version>
  <api-version>0.28</api-version>
- <title>Meta Ports</title>
+ <title>MetaInfo Ports</title>
  <doc>Enables ports such as kfactory ports which can be reconstructed from LayoutMetaInfo stored in the cell</doc>
  <doc-url>https://gdsfactory.github.io/meta-ports</doc-url>
  <url/>

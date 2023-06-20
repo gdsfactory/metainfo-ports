@@ -1,15 +1,14 @@
-site_name: klive
-repo_url: https://github.com/gdsfactory/klive
-site_url: https://gdsfactory.github.io/klive
+site_name: MetaInfo Ports
+repo_url: https://github.com/gdsfactory/metainfo-ports
+site_url: https://gdsfactory.github.io/metainfo-ports
 
 nav:
   - Home: index.md
-  - Troubleshooting: troubleshooting.md
   - Development: dev.md 
   - Changelog: changelog.md
 theme:
   name: "material"
-  logo: "_static/Klive.png"
+  logo: "_static/logo.png"
   features:
     # - navigation.tabs
     # - navigation.tabs.sticky

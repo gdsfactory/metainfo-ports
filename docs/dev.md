@@ -24,15 +24,15 @@ export KLAYOUT_HOME=$HOME/.klayout-dev
 If this is e.g. copied to `/usr/local/bin/klayout-dev` (should work under any Debian and derivates such as Ubuntu etc.) and the execute flag is set (`chmod +x /usr/local/bin/klayout-dev`),
 it can be called with `klayout-dev` from a terminal (probably most DEs will also pick this up).
 
-## klive development
+## MetaInfo Ports development
 
-In  the development environment the repository of klive can by symlinked into `$KLAYOUT_HOME/salt/klive` for example. With this, KLayout will pick it
+In  the development environment the repository of MetaInfo Ports can by symlinked into `$KLAYOUT_HOME/salt/metainfo-ports` for example. With this, KLayout will pick it
 up on startup and still allows modifications with either the macro development or an external IDE.
 
 The following will work under linux, but should also work in MacOS or PowerShell on Windows.
 
 ```bash
-ln -s <path_to_klive_repository>/klayout $HOME/.klayout-dev/salt/klive
+ln -s <path_to_metainfo-ports_repository>/klayout $HOME/.klayout-dev/salt/metainfo-ports
 ```
 
 ## Build docs
