@@ -31,7 +31,10 @@ port_action = pya.Action()
 port_action.icon = poff
 port_action.on_triggered = lambda: toggle_ports(port_action)
 port_action.icon_text = "Show Ports"
+port_action.default_shortcut = "P"
 menu.insert_item("@toolbar.end", "port_action", port_action)
+cells_ports = pya.Action()
+cells_ports 
 mw.on_current_view_changed = lambda: update_icon(port_action)
 
 </text>
