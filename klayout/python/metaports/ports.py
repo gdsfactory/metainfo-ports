@@ -60,7 +60,7 @@ def cell_toggle_ports(lvx, idx, cell):
             shapes_shown[lvx][idx][cidx] = {}
             ports = portdict_from_meta(cell)
             for port in ports.values():
-                shapes = show_port(port, cell)
+                shapes = show_port(port, cell, layout)
                 if port["layer"] not in shapes_shown[lvx][idx][cidx]:
                     shapes_shown[lvx][idx][cidx][port["layer"]] = []
 
@@ -93,7 +93,7 @@ def cell_toggle_ports_state(lvx, idx, cell, state):
             shapes_shown[lvx][idx][cidx] = {}
             ports = portdict_from_meta(cell)
             for port in ports.values():
-                shapes = show_port(port, cell)
+                shapes = show_port(port, cell, layout)
                 if port["layer"] not in shapes_shown[lvx][idx][cidx]:
                     shapes_shown[lvx][idx][cidx][port["layer"]] = []
 
@@ -164,7 +164,7 @@ def portdict_from_meta(cell):
     return ports
 
 
-def show_port(port, cell):
+def show_port(port, cell, layout):
     if "width" in port and "layer" in port and "trans" in port:
         lidx = cell.layout().layer(port["layer"])
         trans = pya.Trans(port["trans"])
@@ -179,11 +179,11 @@ def show_port(port, cell):
         trans = pya.DCplxTrans(port["dcplx_trans"])
         shape = shapes = [
             cell.shapes(lidx).insert(
-                get_polygon(port["width"]).to_dtype(layout.dbu).transformed()
+                get_polygon(port["width"]).to_dtype(layout.dbu).transformed(trans)
             )
         ]
         if "name" in port:
-            shapes.append(cell.shapes(lidx).insert(pya.DText(port["name"], trans)))
+            shapes.append(cell.shapes(lidx).insert(trans.trans(pya.DText(port["name"], pya.DTrans()))))
         return shapes
 
 
