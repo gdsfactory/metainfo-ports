@@ -1,3 +1,4 @@
+# $description: Cell Port Dialog Widget
 import pya
 from metaports.ports import shapes_shown, cell_toggle_ports_state
 
