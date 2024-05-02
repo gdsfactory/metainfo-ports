@@ -45,7 +45,7 @@ class PortMenu(pya.QDialog):
     
     self.table = pya.QTableWidget(self)
     self.table.setColumnCount(1)
-    self.table.setHorizontalHeaderLabels(["Sow ports of cell"])
+    self.table.setHorizontalHeaderLabels(["Show ports of cell"])
     self.table.verticalHeader.visible=False
     self.table.horizontalHeader.setSectionResizeMode(0, pya.QHeaderView_ResizeMode.Stretch)
     self.table.setSelectionMode(pya.QAbstractItemView.NoSelection)
