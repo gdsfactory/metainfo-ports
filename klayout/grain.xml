@@ -3,7 +3,7 @@
  <name>meta-port/klayout</name>
  <token/>
  <hidden>false</hidden>
- <version>0.1.0</version>
+ <version>0.0.6</version>
  <api-version>0.29</api-version>
  <title>MetaInfo Ports</title>
  <doc>Enables ports such as kfactory ports which can be reconstructed from LayoutMetaInfo stored in the cell</doc>
