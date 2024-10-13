@@ -10,6 +10,7 @@ import pya
 app = pya.Application.instance()
 mw = app.main_window()
 
+
 _path = Path(__file__).parents[2]
 poff = str(_path / "PortOff.png")
 pon = str(_path / "PortOn.png")
@@ -22,7 +23,6 @@ dpolygon_dict = {}
 shapes_shown = {}
 
 prefix = "kfactory:ports:"
-
 
 def toggle_ports(action):
     lv = mw.current_view()
@@ -101,6 +101,7 @@ def cell_toggle_ports_state(lvx, idx, cell, state):
                 shapes_shown[lvx][idx][cidx][port["layer"]].extend(shapes)
 
 
+
 def update_icon(action):
     acv = pya.CellView.active()
     idx = acv.index()
@@ -128,21 +129,8 @@ def portdict_from_meta(cell):
     if _format == "default":
         for meta in cell.each_meta_info():
             if meta.name.startswith(prefix):
-                name = meta.name.removeprefix(prefix)
-                index, _type = name.split(":", 1)
-                if index not in ports:
-                    ports[index] = {}
-
-                if _type == "width":
-                    ports[index]["width"] = meta.value
-                elif _type == "trans":
-                    ports[index]["trans"] = meta.value
-                elif _type == "dcplx_trans":
-                    ports[index]["dcplx_trans"] = meta.value
-                elif _type == "layer":
-                    ports[index]["layer"] = meta.value
-                elif _type == "name":
-                    ports[index]["name"] = meta.value
+                index = meta.name.removeprefix(prefix)
+                ports[index] = meta.value
     elif _format == "legacy":
         for meta in cell.each_meta_info():
             if meta.name.startswith(prefix):
@@ -165,7 +153,12 @@ def portdict_from_meta(cell):
     return ports
 
 
-def show_port(port, cell, layout):
+def show_port(port, cell, layout):  
+    
+    if "cross_section" in port:
+        cs = layout.meta_info_value(f"kfactory:cross_section:{port["cross_section"]}")
+        port["width"] = cs["width"]
+        port["layer"] = layout.meta_info_value(f"kfactory:layer_enclosure:{cs["layer_enclosure"]}")["main_layer"]
     if "width" in port and "layer" in port and "trans" in port:
         lidx = cell.layout().layer(port["layer"])
         trans = pya.Trans(port["trans"])
