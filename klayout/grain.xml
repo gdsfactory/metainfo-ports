@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <salt-grain>
- <name>meta-port/klayout</name>
+ <name>metainfo-ports</name>
  <token/>
  <hidden>false</hidden>
  <version>0.1.0</version>
