@@ -156,9 +156,9 @@ def portdict_from_meta(cell):
 def show_port(port, cell, layout):  
     
     if "cross_section" in port:
-        cs = layout.meta_info_value(f"kfactory:cross_section:{port["cross_section"]}")
+        cs = layout.meta_info_value(f"kfactory:cross_section:{port['cross_section']}")
         port["width"] = cs["width"]
-        port["layer"] = layout.meta_info_value(f"kfactory:layer_enclosure:{cs["layer_enclosure"]}")["main_layer"]
+        port["layer"] = layout.meta_info_value(f"kfactory:layer_enclosure:{cs['layer_enclosure']}")["main_layer"]
     if "width" in port and "layer" in port and "trans" in port:
         lidx = cell.layout().layer(port["layer"])
         trans = pya.Trans(port["trans"])
