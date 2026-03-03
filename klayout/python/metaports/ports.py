@@ -24,6 +24,7 @@ shapes_shown = {}
 selected_port_types = {}  # Maps lvx -> idx -> set of selected port types (None means all)
 
 prefix = "kfactory:ports:"
+DEFAULT_PORT_TYPE = "optical"
 
 def toggle_ports(action):
     lv = mw.current_view()
@@ -67,7 +68,7 @@ def cell_toggle_ports(lvx, idx, cell, port_type_filter=None):
                 filter_types = get_selected_port_types(lvx, idx)
             for port in ports.values():
                 # Apply port type filter
-                port_type = port.get("port_type", "optical") if isinstance(port, dict) else "optical"
+                port_type = port.get("port_type", DEFAULT_PORT_TYPE) if isinstance(port, dict) else DEFAULT_PORT_TYPE
                 if filter_types is not None and port_type not in filter_types:
                     continue
                 shapes = show_port(port, cell, layout)
@@ -109,7 +110,7 @@ def cell_toggle_ports_state(lvx, idx, cell, state, port_type_filter=None):
                 filter_types = get_selected_port_types(lvx, idx)
             for port in ports.values():
                 # Apply port type filter
-                port_type = port.get("port_type", "optical") if isinstance(port, dict) else "optical"
+                port_type = port.get("port_type", DEFAULT_PORT_TYPE) if isinstance(port, dict) else DEFAULT_PORT_TYPE
                 if filter_types is not None and port_type not in filter_types:
                     continue
                 shapes = show_port(port, cell, layout)
@@ -183,8 +184,8 @@ def get_all_port_types(layout):
             if isinstance(port, dict) and "port_type" in port:
                 port_types.add(port["port_type"])
             elif isinstance(port, dict) and "port_type" not in port:
-                port_types.add("optical")  # default port type
-    return sorted(port_types) if port_types else ["optical"]
+                port_types.add(DEFAULT_PORT_TYPE)
+    return sorted(port_types) if port_types else [DEFAULT_PORT_TYPE]
 
 
 def get_selected_port_types(lvx, idx):

@@ -72,7 +72,7 @@ class PortMenu(pya.QDialog):
     button_layout = pya.QHBoxLayout(self)
 
     # "Show All" button
-    show_all_button = pya.QPushButton("Show All Cells", self)
+    show_all_button = pya.QPushButton("Show All", self)
     show_all_button.clicked = self.show_all_items
     button_layout.addWidget(show_all_button)
 
@@ -80,7 +80,7 @@ class PortMenu(pya.QDialog):
     button_layout.addStretch()
 
     # "Hide All" button
-    hide_all_button = pya.QPushButton("Hide All Cells", self)
+    hide_all_button = pya.QPushButton("Hide All", self)
     hide_all_button.clicked = self.hide_all_items
     button_layout.addWidget(hide_all_button)
 
@@ -106,7 +106,7 @@ class PortMenu(pya.QDialog):
     """Get currently selected port types from the UI checkboxes."""
     selected = set()
     for port_type, checkbox in self.port_type_checkboxes.items():
-      if checkbox.isChecked:
+      if checkbox.isChecked():
         selected.add(port_type)
     return selected if selected else None
   
