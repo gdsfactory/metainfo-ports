@@ -185,6 +185,9 @@ def get_all_port_types(layout):
                 port_types.add(port["port_type"])
             elif isinstance(port, dict) and "port_type" not in port:
                 port_types.add(DEFAULT_PORT_TYPE)
+            else:
+                # Non-dict ports (e.g., in "default" format) are treated as DEFAULT_PORT_TYPE
+                port_types.add(DEFAULT_PORT_TYPE)
     return sorted(port_types) if port_types else [DEFAULT_PORT_TYPE]
 
 

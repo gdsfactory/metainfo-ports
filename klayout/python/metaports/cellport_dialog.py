@@ -39,7 +39,7 @@ class PortMenu(pya.QDialog):
     current_selection = get_selected_port_types(self.lvx, self.idx)
     
     # Create checkboxes for each port type
-    port_type_checkbox_layout = pya.QHBoxLayout(port_type_group)
+    port_type_checkbox_layout = pya.QHBoxLayout()
     for port_type in self.available_port_types:
       checkbox = pya.QCheckBox(port_type, port_type_group)
       # If no selection exists, check all by default
@@ -55,7 +55,7 @@ class PortMenu(pya.QDialog):
     port_type_layout.addLayout(port_type_checkbox_layout)
     
     # Add select all / deselect all buttons for port types
-    port_type_btn_layout = pya.QHBoxLayout(port_type_group)
+    port_type_btn_layout = pya.QHBoxLayout()
     select_all_types_btn = pya.QPushButton("Select All Types", port_type_group)
     select_all_types_btn.clicked = self.select_all_port_types
     port_type_btn_layout.addWidget(select_all_types_btn)
@@ -104,11 +104,13 @@ class PortMenu(pya.QDialog):
   
   def get_selected_port_types_from_ui(self):
     """Get currently selected port types from the UI checkboxes."""
+    # Always return a set; an empty set means "hide all types", while
+    # None is reserved elsewhere as the sentinel for "no filter / show all".
     selected = set()
     for port_type, checkbox in self.port_type_checkboxes.items():
       if checkbox.isChecked():
         selected.add(port_type)
-    return selected if selected else None
+    return selected
   
   def on_port_type_filter_changed(self, state):
     """Handle port type filter checkbox changes."""
@@ -116,15 +118,27 @@ class PortMenu(pya.QDialog):
     set_selected_port_types(self.lvx, self.idx, selected_types)
     self.refresh_visible_ports()
   
+  def _set_all_port_types_checked(self, checked):
+    """Helper to (de)select all port type checkboxes efficiently."""
+    # Temporarily block signals to avoid N calls to refresh_visible_ports()
+    for checkbox in self.port_type_checkboxes.values():
+      checkbox.blockSignals(True)
+      checkbox.setChecked(checked)
+    # Re-enable signals after all checkboxes have been updated
+    for checkbox in self.port_type_checkboxes.values():
+      checkbox.blockSignals(False)
+    # Now apply the changes once
+    selected_types = self.get_selected_port_types_from_ui()
+    set_selected_port_types(self.lvx, self.idx, selected_types)
+    self.refresh_visible_ports()
+  
   def select_all_port_types(self):
     """Select all port type checkboxes."""
-    for checkbox in self.port_type_checkboxes.values():
-      checkbox.setChecked(True)
+    self._set_all_port_types_checked(True)
   
   def deselect_all_port_types(self):
     """Deselect all port type checkboxes."""
-    for checkbox in self.port_type_checkboxes.values():
-      checkbox.setChecked(False)
+    self._set_all_port_types_checked(False)
   
   def refresh_visible_ports(self):
     """Refresh visible ports based on current filter settings."""
