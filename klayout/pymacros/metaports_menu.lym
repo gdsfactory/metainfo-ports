@@ -38,7 +38,7 @@ metaports_menu_name = "@metaports"
 
 menu.insert_menu("@toolbar.end", "metaports", port_action)
 cells_ports_action = pya.Action()
-cells_ports_action.icon_text = "Show per Cell"
+cells_ports_action.icon_text = "Show per Cell and Port type"
 cells_ports_action.on_triggered = lambda: PortMenu(pya.Application.instance().main_window()).show()
 menu.insert_item("@toolbar.metaports.end", "cell_dialog", cells_ports_action) 
 mw.on_current_view_changed = lambda: update_icon(port_action)
