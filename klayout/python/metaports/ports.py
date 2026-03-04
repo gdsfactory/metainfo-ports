@@ -21,8 +21,10 @@ with (_path / "settings.json").open("rb") as settings_file:
 polygon_dict = {}
 dpolygon_dict = {}
 shapes_shown = {}
+selected_port_types = {}  # Maps lvx -> idx -> set of selected port types (None means all)
 
 prefix = "kfactory:ports:"
+DEFAULT_PORT_TYPE = "optical"
 
 def toggle_ports(action):
     lv = mw.current_view()
@@ -37,7 +39,7 @@ def toggle_ports(action):
     update_icon(action)
 
 
-def cell_toggle_ports(lvx, idx, cell):
+def cell_toggle_ports(lvx, idx, cell, port_type_filter=None):
     if cell is not None:
         cidx = cell.cell_index()
         layout = cell.layout()
@@ -60,15 +62,24 @@ def cell_toggle_ports(lvx, idx, cell):
         else:
             shapes_shown[lvx][idx][cidx] = {}
             ports = portdict_from_meta(cell)
+            # Get selected port types for filtering
+            filter_types = port_type_filter
+            if filter_types is None:
+                filter_types = get_selected_port_types(lvx, idx)
             for port in ports.values():
+                # Apply port type filter
+                port_type = port.get("port_type", DEFAULT_PORT_TYPE) if isinstance(port, dict) else DEFAULT_PORT_TYPE
+                if filter_types is not None and port_type not in filter_types:
+                    continue
                 shapes = show_port(port, cell, layout)
-                if port["layer"] not in shapes_shown[lvx][idx][cidx]:
+                if shapes and port["layer"] not in shapes_shown[lvx][idx][cidx]:
                     shapes_shown[lvx][idx][cidx][port["layer"]] = []
 
-                shapes_shown[lvx][idx][cidx][port["layer"]].extend(shapes)
+                if shapes:
+                    shapes_shown[lvx][idx][cidx][port["layer"]].extend(shapes)
 
 
-def cell_toggle_ports_state(lvx, idx, cell, state):
+def cell_toggle_ports_state(lvx, idx, cell, state, port_type_filter=None):
     if cell is not None:
         cidx = cell.cell_index()
         layout = cell.layout()
@@ -93,12 +104,21 @@ def cell_toggle_ports_state(lvx, idx, cell, state):
         elif not has_shapes and state:
             shapes_shown[lvx][idx][cidx] = {}
             ports = portdict_from_meta(cell)
+            # Get selected port types for filtering
+            filter_types = port_type_filter
+            if filter_types is None:
+                filter_types = get_selected_port_types(lvx, idx)
             for port in ports.values():
+                # Apply port type filter
+                port_type = port.get("port_type", DEFAULT_PORT_TYPE) if isinstance(port, dict) else DEFAULT_PORT_TYPE
+                if filter_types is not None and port_type not in filter_types:
+                    continue
                 shapes = show_port(port, cell, layout)
-                if port["layer"] not in shapes_shown[lvx][idx][cidx]:
+                if shapes and port["layer"] not in shapes_shown[lvx][idx][cidx]:
                     shapes_shown[lvx][idx][cidx][port["layer"]] = []
 
-                shapes_shown[lvx][idx][cidx][port["layer"]].extend(shapes)
+                if shapes:
+                    shapes_shown[lvx][idx][cidx][port["layer"]].extend(shapes)
 
 
 
@@ -149,8 +169,42 @@ def portdict_from_meta(cell):
                     ports[index]["layer"] = pya.LayerInfo.from_string(meta.value)
                 elif _type == "name":
                     ports[index]["name"] = meta.value
+                elif _type == "port_type":
+                    ports[index]["port_type"] = meta.value
 
     return ports
+
+
+def get_all_port_types(layout):
+    """Get all unique port types from all cells in a layout."""
+    port_types = set()
+    for cell in layout.each_cell():
+        ports = portdict_from_meta(cell)
+        for port in ports.values():
+            if isinstance(port, dict) and "port_type" in port:
+                port_types.add(port["port_type"])
+            elif isinstance(port, dict) and "port_type" not in port:
+                port_types.add(DEFAULT_PORT_TYPE)
+            else:
+                # Non-dict ports (e.g., in "default" format) are treated as DEFAULT_PORT_TYPE
+                port_types.add(DEFAULT_PORT_TYPE)
+    return sorted(port_types) if port_types else [DEFAULT_PORT_TYPE]
+
+
+def get_selected_port_types(lvx, idx):
+    """Get the currently selected port types for filtering."""
+    if lvx not in selected_port_types:
+        return None
+    if idx not in selected_port_types[lvx]:
+        return None
+    return selected_port_types[lvx][idx]
+
+
+def set_selected_port_types(lvx, idx, port_types):
+    """Set the selected port types for filtering."""
+    if lvx not in selected_port_types:
+        selected_port_types[lvx] = {}
+    selected_port_types[lvx][idx] = port_types
 
 
 def show_port(port, cell, layout):  
