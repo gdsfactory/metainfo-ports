@@ -166,7 +166,7 @@ def show_port(port, cell, layout):
             cell.shapes(lidx).insert(get_polygon(port["width"]).transformed(trans))
         ]
         if "name" in port:
-            shapes.append(cell.shapes(lidx).insert(pya.Text(port["name"], trans)))
+            shapes.append(cell.shapes(lidx).insert(pya.Text(port["name"], pya.Trans(trans.disp))))
         return shapes
     elif "width" in port and "layer" in port and "dcplx_trans" in port:
         lidx = cell.layout().layer(port["layer"])
@@ -177,7 +177,7 @@ def show_port(port, cell, layout):
             )
         ]
         if "name" in port:
-            shapes.append(cell.shapes(lidx).insert(trans.trans(pya.DText(port["name"], pya.DTrans()))))
+            shapes.append(cell.shapes(lidx).insert(pya.DText(port["name"], pya.DTrans(trans.disp))))
         return shapes
 
 
@@ -194,7 +194,7 @@ def get_polygon(width):
         )
 
         hole = pya.Region(poly).sized(-int(width * 0.05) or -1)
-        hole -= pya.Region(pya.Box(0, 0, width // 2, -width // 2))
+        hole -= pya.Region(pya.Box(0, 0, width // 2, width // 2))
 
         poly.insert_hole(list(list(hole.each())[0].each_point_hull()))
         polygon_dict[width] = poly
