@@ -1,4 +1,4 @@
-# MetaInfo Ports 0.1.1
+# MetaInfo Ports 0.1.2
 
 MetaInfo ports is a small package to allow visualizing the ports saved in a cell's LayoutMetaInfos.
 
