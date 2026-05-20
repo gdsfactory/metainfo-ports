@@ -23,28 +23,29 @@ from metaports.cellport_dialog import PortMenu
 
 app = pya.Application.instance()
 mw = app.main_window()
-menu =  mw.menu()
-
-_path = Path(__file__).parent.parent
-poff = str(_path/"PortOff.png")
-
-port_action = pya.Action()
-port_action.icon = poff
-port_action.on_triggered = lambda: toggle_ports(port_action)
-port_action.icon_text = "Show Ports"
-port_action.default_shortcut = "P"
-
-metaports_menu_name = "@metaports"
-
-menu.insert_menu("@toolbar.end", "metaports", port_action)
-cells_ports_action = pya.Action()
-cells_ports_action.icon_text = "Show per Cell"
-cells_ports_action.on_triggered = lambda: PortMenu(pya.Application.instance().main_window()).show()
-menu.insert_item("@toolbar.metaports.end", "cell_dialog", cells_ports_action) 
-mw.on_current_view_changed = lambda: update_icon(port_action)
-
-
-def _on_view_created(lvx):
-  lv = mw.view(lvx)
-  lv.on_cell_view_changed = lambda idx: update_icon(port_action)</text>
+if mw is not None:
+  menu =  mw.menu()
+  
+  _path = Path(__file__).parent.parent
+  poff = str(_path/"PortOff.png")
+  
+  port_action = pya.Action()
+  port_action.icon = poff
+  port_action.on_triggered = lambda: toggle_ports(port_action)
+  port_action.icon_text = "Show Ports"
+  port_action.default_shortcut = "P"
+  
+  metaports_menu_name = "@metaports"
+  
+  menu.insert_menu("@toolbar.end", "metaports", port_action)
+  cells_ports_action = pya.Action()
+  cells_ports_action.icon_text = "Show per Cell"
+  cells_ports_action.on_triggered = lambda: PortMenu(pya.Application.instance().main_window()).show()
+  menu.insert_item("@toolbar.metaports.end", "cell_dialog", cells_ports_action) 
+  mw.on_current_view_changed = lambda: update_icon(port_action)
+  
+  
+  def _on_view_created(lvx):
+    lv = mw.view(lvx)
+    lv.on_cell_view_changed = lambda idx: update_icon(port_action)</text>
 </klayout-macro>
